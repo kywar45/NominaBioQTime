@@ -1,8 +1,21 @@
 const routes = [
   {
+    path: '/login',
+    component: () => import('pages/LoginPage.vue'),
+    meta: { guestOnly: true },
+  },
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    meta: { requiresAuth: true },
+    children: [
+      { path: '', redirect: '/dashboard' },
+      { path: 'dashboard', component: () => import('pages/DashboardPage.vue') },
+      { path: 'empleados', component: () => import('pages/EmployeesPage.vue') },
+      { path: 'turnos', component: () => import('pages/ShiftsPage.vue') },
+      { path: 'departamentos', component: () => import('pages/DepartmentsPage.vue') },
+      { path: 'reglas', component: () => import('pages/RulesPage.vue') },
+    ],
   },
 
   // Always leave this as last one,

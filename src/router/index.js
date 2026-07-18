@@ -33,5 +33,17 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
+  Router.beforeEach((to) => {
+    const hasSession = Boolean(localStorage.getItem('nomina_session'))
+
+    if (to.meta.requiresAuth && !hasSession) {
+      return '/login'
+    }
+
+    if (to.meta.guestOnly && hasSession) {
+      return '/dashboard'
+    }
+  })
+
   return Router
 })

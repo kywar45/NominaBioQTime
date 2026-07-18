@@ -74,6 +74,17 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
+      proxy: {
+        '/NominaBioQTime/api': {
+          target: 'http://localhost',
+          changeOrigin: true,
+        },
+        '/api': {
+          target: 'http://localhost',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '/NominaBioQTime/api'),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
