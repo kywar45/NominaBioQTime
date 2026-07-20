@@ -1,10 +1,19 @@
 <template>
-  <q-layout view="lHh Lpr lFf" class="nomina-layout">
+  <q-layout view="lHh Lpr lFf" :class="['nomina-layout', themeClass]">
     <q-header class="nomina-header">
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> NominaBioQTime </q-toolbar-title>
+
+        <q-btn
+          flat
+          dense
+          round
+          :icon="isLightTheme ? 'dark_mode' : 'light_mode'"
+          :aria-label="isLightTheme ? 'Usar tema oscuro' : 'Usar tema claro'"
+          @click="toggleTheme"
+        />
       </q-toolbar>
     </q-header>
 
@@ -31,9 +40,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const leftDrawerOpen = ref(false)
+const savedTheme = localStorage.getItem('nomina_theme')
+const theme = ref(savedTheme === 'light' ? 'light' : 'dark')
+const isLightTheme = computed(() => theme.value === 'light')
+const themeClass = computed(() => `nomina-layout--${theme.value}`)
 const menuItems = [
   { to: '/dashboard', icon: 'dashboard', label: 'Inicio', caption: 'Resumen del sistema' },
   { to: '/empleados', icon: 'groups', label: 'Empleados', caption: 'Personal y datos laborales' },
@@ -44,5 +57,10 @@ const menuItems = [
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function toggleTheme() {
+  theme.value = isLightTheme.value ? 'dark' : 'light'
+  localStorage.setItem('nomina_theme', theme.value)
 }
 </script>

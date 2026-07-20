@@ -125,23 +125,23 @@ function logout() {
   font-size: clamp(2.2rem, 4vw, 4rem);
   font-weight: 800;
   line-height: 1;
-  color: #ffffff;
+  color: var(--app-text);
 }
 
 .dashboard-header p {
   margin: 10px 0 0;
-  color: rgba(219, 231, 243, 0.74);
+  color: var(--app-muted);
   font-size: 0.95rem;
 }
 
 .dashboard-page {
   min-height: 100%;
   padding: clamp(22px, 3vw, 42px);
-  color: #ffffff;
+  color: var(--app-text);
 }
 
 .dashboard-kicker {
-  color: #2dff68;
+  color: var(--app-accent);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -150,7 +150,7 @@ function logout() {
 
 .logout-btn {
   border-radius: 12px;
-  color: #49a7ff;
+  color: var(--app-blue);
 }
 
 .summary-grid {
@@ -162,15 +162,13 @@ function logout() {
 
 .summary-card,
 .permissions-panel {
-  border: 1px solid rgba(120, 156, 190, 0.32);
+  border: 1px solid var(--app-border);
   border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
-    rgba(7, 18, 29, 0.72);
+  background: var(--app-panel-bg);
   backdrop-filter: blur(20px) saturate(1.25);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 14px 38px rgba(0, 0, 0, 0.18);
+    var(--app-shadow);
 }
 
 .summary-card {
@@ -189,20 +187,20 @@ function logout() {
   border: 1px solid rgba(45, 255, 104, 0.24);
   border-radius: 50%;
   background: rgba(45, 255, 104, 0.08);
-  color: #2dff68;
+  color: var(--app-accent);
   font-size: 24px;
 }
 
 .summary-card span {
   display: block;
-  color: rgba(219, 231, 243, 0.62);
+  color: var(--app-subtle);
   font-size: 0.8rem;
 }
 
 .summary-card strong {
   display: block;
   margin-top: 3px;
-  color: #ffffff;
+  color: var(--app-text);
   font-size: 1.25rem;
   line-height: 1.1;
   overflow-wrap: anywhere;
@@ -222,24 +220,24 @@ function logout() {
 
 .panel-heading h2 {
   margin: 0;
-  color: #ffffff;
+  color: var(--app-text);
   font-size: 1.2rem;
 }
 
 .panel-heading p {
   margin: 4px 0 0;
-  color: rgba(219, 231, 243, 0.62);
+  color: var(--app-subtle);
   font-size: 0.86rem;
 }
 
 .dashboard-table {
   background: transparent;
-  color: #e9f4ff;
+  color: var(--app-text);
 }
 
 .dashboard-table :deep(.q-table__title),
 .dashboard-table :deep(th) {
-  color: rgba(232, 241, 250, 0.72);
+  color: var(--app-subtle);
   font-size: 0.76rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -247,7 +245,7 @@ function logout() {
 }
 
 .dashboard-table :deep(td) {
-  color: rgba(232, 241, 250, 0.82);
+  color: var(--app-muted);
   border-color: rgba(215, 235, 255, 0.07);
   font-weight: 650;
 }
@@ -264,7 +262,7 @@ function logout() {
   justify-content: center;
   border-radius: 999px;
   border: 1px solid rgba(215, 235, 255, 0.12);
-  color: rgba(219, 231, 243, 0.5);
+  color: var(--app-subtle);
   font-size: 0.72rem;
   font-weight: 800;
 }
@@ -272,7 +270,7 @@ function logout() {
 .permission-pill--on {
   border-color: rgba(45, 255, 104, 0.28);
   background: rgba(45, 255, 104, 0.09);
-  color: #2dff68;
+  color: var(--app-accent);
 }
 
 .permission-pill--off {
