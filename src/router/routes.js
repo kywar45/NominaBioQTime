@@ -15,6 +15,11 @@ const routes = [
       { path: 'turnos', component: () => import('pages/ShiftsPage.vue') },
       { path: 'departamentos', component: () => import('pages/DepartmentsPage.vue') },
       { path: 'reglas', component: () => import('pages/RulesPage.vue') },
+      { path: 'vacaciones', component: () => import('pages/VacationsPage.vue') },
+      { path: 'dias-festivos', component: () => import('pages/HolidaysPage.vue') },
+      { path: 'prestamos', component: () => import('pages/LoansPage.vue') },
+      { path: 'imss', component: () => import('pages/ImssPage.vue') },
+      { path: 'nomina', component: () => import('pages/PayrollPage.vue') },
     ],
   },
 

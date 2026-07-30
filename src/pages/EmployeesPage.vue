@@ -34,7 +34,6 @@
       <div class="module-panel__heading">
         <div>
           <h2>Directorio de empleados</h2>
-          <p>Configura la informacion laboral sin crear empleados nuevos.</p>
         </div>
         <q-input
           v-model="filter"
@@ -53,57 +52,95 @@
         {{ errorMessage }}
       </q-banner>
 
-      <q-table
-        :rows="employees"
-        :columns="columns"
-        :filter="filter"
-        :pagination="pagination"
-        :loading="loading"
-        row-key="id"
-        flat
-        hide-bottom
-        class="module-table module-table--scroll"
-      >
-        <template #body-cell-activo="props">
-          <q-td :props="props">
-            <span :class="['status-pill', Number(props.value) === 1 ? 'status-pill--on' : '']">
-              {{ Number(props.value) === 1 ? 'Activo' : 'Inactivo' }}
-            </span>
-          </q-td>
-        </template>
+      <div class="employee-tabs">
+        <q-tabs
+          v-model="activeEmployeeTab"
+          dense
+          align="left"
+          active-color="primary"
+          indicator-color="primary"
+          class="employee-tabs__nav"
+        >
+          <q-tab
+            name="configured"
+            icon="assignment_ind"
+            :label="`Configurados (${configuredEmployees.length})`"
+          />
+          <q-tab
+            name="unconfigured"
+            icon="manage_accounts"
+            :label="`Sin configurar (${unconfiguredEmployees.length})`"
+          />
+          <q-tab
+            name="inactive"
+            icon="person_off"
+            :label="`Inactivos (${inactiveEmployees.length})`"
+          />
+        </q-tabs>
 
-        <template #body-cell-actions="props">
-          <q-td :props="props">
-            <div class="table-actions">
-              <q-btn
-                flat
-                round
-                dense
-                icon="edit"
-                aria-label="Editar empleado"
-                @click="openEdit(props.row)"
-              />
-              <q-btn
-                flat
-                round
-                dense
-                icon="delete"
-                color="negative"
-                aria-label="Eliminar empleado"
-                :disable="Number(props.row.activo) !== 1"
-                @click="confirmDelete(props.row)"
-              />
-            </div>
-          </q-td>
-        </template>
+        <q-tab-panels v-model="activeEmployeeTab" animated class="employee-tabs__panels">
+          <q-tab-panel
+            v-for="group in employeeGroups"
+            :key="group.key"
+            :name="group.key"
+            class="employee-tabs__panel"
+          >
+            <q-table
+              :rows="group.rows"
+              :columns="columns"
+              :filter="filter"
+              :pagination="pagination"
+              :loading="loading"
+              row-key="id"
+              flat
+              hide-bottom
+              class="module-table module-table--scroll employee-tabs__table"
+            >
+              <template #body-cell-activo="props">
+                <q-td :props="props">
+                  <span
+                    :class="['status-pill', Number(props.value) === 1 ? 'status-pill--on' : '']"
+                  >
+                    {{ Number(props.value) === 1 ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </q-td>
+              </template>
 
-        <template #no-data>
-          <div class="module-empty">
-            <q-icon name="person_search" />
-            <span>No hay empleados cargados.</span>
-          </div>
-        </template>
-      </q-table>
+              <template #body-cell-actions="props">
+                <q-td :props="props">
+                  <div class="table-actions">
+                    <q-btn
+                      flat
+                      round
+                      dense
+                      icon="edit"
+                      aria-label="Editar empleado"
+                      @click="openEdit(props.row)"
+                    />
+                    <q-btn
+                      flat
+                      round
+                      dense
+                      icon="delete"
+                      color="negative"
+                      aria-label="Eliminar empleado"
+                      :disable="Number(props.row.activo) !== 1"
+                      @click="confirmDelete(props.row)"
+                    />
+                  </div>
+                </q-td>
+              </template>
+
+              <template #no-data>
+                <div class="module-empty employee-tabs__empty">
+                  <q-icon :name="group.emptyIcon" />
+                  <span>{{ group.emptyText }}</span>
+                </div>
+              </template>
+            </q-table>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
     </section>
 
     <q-dialog v-model="dialogOpen" persistent>
@@ -178,6 +215,17 @@
               />
             </div>
 
+            <q-select
+              v-model="form.dia_libre"
+              outlined
+              emit-value
+              map-options
+              clearable
+              label="Dia libre"
+              :options="restDayOptions"
+              :disable="saving"
+            />
+
             <div class="employee-form__single">
               <div class="shift-form__toggles">
                 <q-toggle v-model="form.activo" label="Empleado activo" :disable="saving" />
@@ -250,14 +298,25 @@ const formError = ref('')
 const deleteDialogOpen = ref(false)
 const employeeToDelete = ref(null)
 const deleting = ref(false)
+const activeEmployeeTab = ref('configured')
 const today = new Date().toISOString().slice(0, 10)
 const salaryTypeOptions = ['diario', 'semanal', 'quincenal', 'mensual']
+const restDayOptions = [
+  { label: 'Domingo', value: 0 },
+  { label: 'Lunes', value: 1 },
+  { label: 'Martes', value: 2 },
+  { label: 'Miercoles', value: 3 },
+  { label: 'Jueves', value: 4 },
+  { label: 'Viernes', value: 5 },
+  { label: 'Sabado', value: 6 },
+]
 const defaultForm = {
   fecha_ingreso: null,
   departamento_id: null,
   turno_id: null,
   sueldo_base: null,
   tipo_sueldo: null,
+  dia_libre: null,
   fecha_inicio: today,
   activo: true,
 }
@@ -284,15 +343,37 @@ const shiftOptions = computed(() =>
 const activeCount = computed(
   () => employees.value.filter((employee) => Number(employee.activo) === 1).length,
 )
-const configuredCount = computed(
-  () =>
-    employees.value.filter(
-      (employee) =>
-        Boolean(employee.departamento_id) ||
-        Boolean(employee.turno_id) ||
-        employee.sueldo_base !== null,
-    ).length,
+const activeEmployees = computed(() =>
+  employees.value.filter((employee) => Number(employee.activo) === 1),
 )
+const inactiveEmployees = computed(() =>
+  employees.value.filter((employee) => Number(employee.activo) !== 1),
+)
+const configuredEmployees = computed(() => activeEmployees.value.filter(isEmployeeConfigured))
+const unconfiguredEmployees = computed(() =>
+  activeEmployees.value.filter((employee) => !isEmployeeConfigured(employee)),
+)
+const configuredCount = computed(() => configuredEmployees.value.length)
+const employeeGroups = computed(() => [
+  {
+    key: 'configured',
+    rows: configuredEmployees.value,
+    emptyIcon: 'assignment_ind',
+    emptyText: 'No hay empleados configurados.',
+  },
+  {
+    key: 'unconfigured',
+    rows: unconfiguredEmployees.value,
+    emptyIcon: 'manage_accounts',
+    emptyText: 'No hay empleados sin configurar.',
+  },
+  {
+    key: 'inactive',
+    rows: inactiveEmployees.value,
+    emptyIcon: 'person_off',
+    emptyText: 'No hay empleados inactivos.',
+  },
+])
 const columns = [
   { name: 'nombre', label: 'Empleado', field: 'nombre', align: 'left', sortable: true },
   {
@@ -326,6 +407,14 @@ const columns = [
     align: 'right',
     sortable: true,
     format: (value, row) => formatSalary(value, row.tipo_sueldo),
+  },
+  {
+    name: 'dia_libre',
+    label: 'Dia libre',
+    field: 'dia_libre',
+    align: 'left',
+    sortable: true,
+    format: (value) => formatRestDay(value),
   },
   { name: 'activo', label: 'Estatus', field: 'activo', align: 'center', sortable: true },
   { name: 'actions', label: '', field: 'actions', align: 'right' },
@@ -379,6 +468,10 @@ function openEdit(employee) {
         ? null
         : Number(employee.sueldo_base),
     tipo_sueldo: employee.tipo_sueldo || null,
+    dia_libre:
+      employee.dia_libre === null || employee.dia_libre === undefined
+        ? null
+        : Number(employee.dia_libre),
     fecha_inicio: employee.configuracion_fecha_inicio || employee.fecha_ingreso || today,
     activo: Number(employee.activo) === 1,
   }
@@ -407,6 +500,12 @@ async function saveEmployee() {
 function confirmDelete(employee) {
   employeeToDelete.value = employee
   deleteDialogOpen.value = true
+}
+
+function isEmployeeConfigured(employee) {
+  return (
+    Boolean(employee.departamento_id) || Boolean(employee.turno_id) || employee.sueldo_base !== null
+  )
 }
 
 async function deleteSelectedEmployee() {
@@ -457,5 +556,13 @@ function formatSalary(value, type) {
   const salaryType = type ? ` / ${type}` : ''
 
   return `${formattedAmount}${salaryType}`
+}
+
+function formatRestDay(value) {
+  if (value === null || value === undefined || value === '') {
+    return 'Sin configurar'
+  }
+
+  return restDayOptions.find((day) => day.value === Number(value))?.label || 'Sin configurar'
 }
 </script>

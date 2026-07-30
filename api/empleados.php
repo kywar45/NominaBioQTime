@@ -6,6 +6,8 @@ require __DIR__ . '/db.php';
 api_headers();
 
 try {
+    ensure_employee_config_columns();
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = db()->query(
             'SELECT
@@ -20,6 +22,7 @@ try {
                 t.nombre_turno AS turno,
                 config.sueldo_base,
                 config.tipo_sueldo,
+                config.dia_libre,
                 config.fecha_inicio AS configuracion_fecha_inicio
              FROM empleados e
              LEFT JOIN (
@@ -84,6 +87,7 @@ try {
                      turno_id = :turno_id,
                      sueldo_base = :sueldo_base,
                      tipo_sueldo = :tipo_sueldo,
+                     dia_libre = :dia_libre,
                      fecha_inicio = :fecha_inicio,
                      fecha_fin = NULL,
                      activo = 1
@@ -98,6 +102,7 @@ try {
                     turno_id,
                     sueldo_base,
                     tipo_sueldo,
+                    dia_libre,
                     fecha_inicio,
                     fecha_fin,
                     activo
@@ -107,6 +112,7 @@ try {
                     :turno_id,
                     :sueldo_base,
                     :tipo_sueldo,
+                    :dia_libre,
                     :fecha_inicio,
                     NULL,
                     1
@@ -167,6 +173,7 @@ function employee_config_payload(array $input): array
     $shiftId = nullable_int($input['turno_id'] ?? null);
     $salary = nullable_float($input['sueldo_base'] ?? null);
     $salaryType = trim($input['tipo_sueldo'] ?? '');
+    $restDay = nullable_int_zero($input['dia_libre'] ?? null);
     $startDate = trim($input['fecha_inicio'] ?? '');
     $employeeStartDate = nullable_date($input['fecha_ingreso'] ?? null);
 
@@ -178,6 +185,10 @@ function employee_config_payload(array $input): array
         json_response(['ok' => false, 'message' => 'Tipo de sueldo no valido.'], 422);
     }
 
+    if ($restDay !== null && ($restDay < 0 || $restDay > 6)) {
+        json_response(['ok' => false, 'message' => 'Dia libre no valido.'], 422);
+    }
+
     if ($startDate === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate)) {
         json_response(['ok' => false, 'message' => 'La fecha de inicio no es valida.'], 422);
     }
@@ -187,6 +198,7 @@ function employee_config_payload(array $input): array
         'turno_id' => $shiftId,
         'sueldo_base' => $salary,
         'tipo_sueldo' => $salaryType === '' ? null : $salaryType,
+        'dia_libre' => $restDay,
         'fecha_inicio' => $startDate,
         'fecha_ingreso_empleado' => $employeeStartDate,
         'empleado_activo' => array_key_exists('activo', $input) ? (int) (bool) $input['activo'] : 1,
@@ -201,6 +213,7 @@ function config_statement_payload(array $data, bool $includeConfigId = false): a
         'turno_id' => $data['turno_id'],
         'sueldo_base' => $data['sueldo_base'],
         'tipo_sueldo' => $data['tipo_sueldo'],
+        'dia_libre' => $data['dia_libre'],
         'fecha_inicio' => $data['fecha_inicio'],
     ];
 
@@ -221,6 +234,36 @@ function nullable_int(mixed $value): ?int
     $number = (int) $value;
 
     return $number > 0 ? $number : null;
+}
+
+function nullable_int_zero(mixed $value): ?int
+{
+    if ($value === null || $value === '') {
+        return null;
+    }
+
+    return (int) $value;
+}
+
+function ensure_employee_config_columns(): void
+{
+    ensure_employee_config_column('dia_libre', 'TINYINT UNSIGNED NULL AFTER tipo_sueldo');
+}
+
+function ensure_employee_config_column(string $column, string $definition): void
+{
+    $stmt = db()->prepare(
+        "SELECT COUNT(*) AS total
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = 'empleado_configuracion_laboral'
+           AND COLUMN_NAME = :column"
+    );
+    $stmt->execute(['column' => $column]);
+
+    if ((int) $stmt->fetch()['total'] === 0) {
+        db()->exec("ALTER TABLE empleado_configuracion_laboral ADD COLUMN $column $definition");
+    }
 }
 
 function nullable_float(mixed $value): ?float

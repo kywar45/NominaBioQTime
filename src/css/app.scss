@@ -151,6 +151,13 @@ body {
   margin-bottom: 20px;
 }
 
+.module-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .module-kicker {
   color: var(--app-accent);
   font-size: 0.75rem;
@@ -371,6 +378,43 @@ body {
   font-size: 30px;
 }
 
+.employee-tabs {
+  display: grid;
+  gap: 14px;
+}
+
+.employee-tabs__nav {
+  border-bottom: 1px solid var(--app-border);
+  color: var(--app-muted);
+}
+
+.employee-tabs__nav .q-tab {
+  min-height: 44px;
+  border-radius: 10px 10px 0 0;
+  font-weight: 850;
+}
+
+.employee-tabs__panels {
+  background: transparent;
+  color: var(--app-text);
+}
+
+.employee-tabs__panel {
+  padding: 0;
+}
+
+.employee-tabs__table {
+  max-height: min(50vh, 600px);
+}
+
+.employee-tabs__table .q-table__middle {
+  max-height: min(50vh, 600px);
+}
+
+.employee-tabs__empty {
+  min-height: 120px;
+}
+
 .color-chip,
 .status-pill {
   display: inline-flex;
@@ -402,6 +446,12 @@ body {
   border-color: rgba(73, 167, 255, 0.28);
   background: rgba(73, 167, 255, 0.1);
   color: var(--app-blue);
+}
+
+.status-pill--danger {
+  border-color: rgba(255, 98, 98, 0.3);
+  background: rgba(255, 98, 98, 0.1);
+  color: #ff8c8c;
 }
 
 .status-pill--off {
@@ -479,14 +529,321 @@ body {
   color: #0a7a49;
 }
 
+.vacation-date-picker,
+.vacation-date-picker .q-date__main,
+.vacation-date-picker .q-date__content {
+  background: #ffffff;
+  color: #102033 !important;
+}
+
+.vacation-date-picker .q-date__navigation,
+.vacation-date-picker .q-date__navigation .q-btn,
+.vacation-date-picker .q-date__calendar-weekdays,
+.vacation-date-picker .q-date__calendar-weekdays > div,
+.vacation-date-picker .q-date__calendar-days,
+.vacation-date-picker .q-date__calendar-item,
+.vacation-date-picker .q-date__calendar-item > div {
+  color: #102033 !important;
+}
+
+.vacation-date-picker .q-date__calendar-item--out {
+  opacity: 0.38;
+}
+
+.vacation-date-picker .q-date__calendar-item .q-btn,
+.vacation-date-picker .q-date__calendar-item .q-btn__content {
+  color: #102033 !important;
+}
+
+.vacation-date-picker .q-date__calendar-item .q-btn.bg-primary,
+.vacation-date-picker .q-date__calendar-item .q-btn.bg-primary .q-btn__content {
+  color: #ffffff !important;
+}
+
 .shift-form {
   display: grid;
   gap: 18px;
 }
 
+.rule-form,
+.vacation-form,
+.holiday-form,
+.imss-form,
+.loan-form,
 .department-form {
   display: grid;
   gap: 14px;
+}
+
+.loan-plan-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.loan-plan-preview > div {
+  min-height: 58px;
+  border: 1px solid rgba(70, 103, 135, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.46);
+  padding: 10px 12px;
+}
+
+.loan-plan-preview span {
+  display: block;
+  color: rgba(82, 98, 119, 0.76);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.loan-plan-preview strong {
+  display: block;
+  margin-top: 4px;
+  color: #102033;
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.loan-history {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(70, 103, 135, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.46);
+  padding: 12px;
+}
+
+.loan-history h3 {
+  margin: 0;
+  color: #102033;
+  font-size: 0.95rem;
+  font-weight: 850;
+}
+
+.loan-history p {
+  margin: 0;
+  color: rgba(82, 98, 119, 0.76);
+  font-size: 0.82rem;
+}
+
+.loan-history__list {
+  display: grid;
+  gap: 6px;
+}
+
+.loan-history__list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(70, 103, 135, 0.12);
+  padding-top: 6px;
+}
+
+.loan-history__list span {
+  color: rgba(82, 98, 119, 0.76);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.loan-history__list strong {
+  color: #102033;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.payroll-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.payroll-toolbar .q-field {
+  width: 150px;
+}
+
+.payroll-tabs .q-table__middle {
+  overflow: auto;
+}
+
+.payroll-table th:first-child,
+.payroll-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--app-table-head-bg);
+}
+
+.payroll-table td:first-child {
+  background: rgba(246, 251, 255, 0.88);
+}
+
+.payroll-day-head {
+  display: grid;
+  min-width: 74px;
+  gap: 2px;
+  text-align: center;
+}
+
+.payroll-day-head span {
+  color: var(--app-subtle);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.payroll-day-head strong {
+  color: var(--app-text);
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.payroll-check-cell {
+  display: grid;
+  min-width: 78px;
+  gap: 2px;
+  color: #13324d;
+  font-size: 0.74rem;
+  font-weight: 750;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.payroll-check-cell span:first-child {
+  color: #0f5f98;
+}
+
+.payroll-check-cell span:last-child,
+.payroll-check-cell strong {
+  color: #dc2626;
+}
+
+.payroll-check-cell small {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid rgba(245, 158, 11, 0.34);
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.1);
+  color: #a15c00;
+  font-size: 0.66rem;
+  font-weight: 850;
+  line-height: 1;
+  padding: 3px 6px;
+}
+
+.payroll-check-cell--free {
+  place-items: center;
+  text-align: center;
+}
+
+.payroll-check-cell--free strong {
+  border-radius: 999px;
+  background: rgba(10, 168, 95, 0.1);
+  color: #0a7a49;
+  padding: 4px 8px;
+}
+
+.loan-document-dialog {
+  background: #eef5f8;
+  color: #102033;
+}
+
+.loan-document-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid rgba(70, 103, 135, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.loan-document-toolbar h2 {
+  margin: 4px 0 0;
+  color: #102033;
+  font-size: 1.25rem;
+  font-weight: 850;
+}
+
+.loan-document {
+  display: grid;
+  max-width: 980px;
+  margin: 0 auto;
+  gap: 18px;
+}
+
+.loan-letter,
+.loan-note {
+  border: 1px solid rgba(70, 103, 135, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: clamp(18px, 3vw, 30px);
+  box-shadow: 0 12px 30px rgba(30, 54, 75, 0.1);
+}
+
+.loan-letter h2,
+.loan-note h3 {
+  margin: 0 0 12px;
+  color: #102033;
+}
+
+.loan-letter p,
+.loan-note p {
+  color: rgba(55, 72, 92, 0.84);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.loan-signatures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 48px;
+}
+
+.loan-signatures > div,
+.loan-note__signature {
+  border-top: 1px solid rgba(16, 32, 51, 0.42);
+  padding-top: 8px;
+  text-align: center;
+}
+
+.loan-signatures span,
+.loan-note__meta {
+  display: block;
+  color: rgba(82, 98, 119, 0.76);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.loan-signatures strong {
+  display: block;
+  margin-top: 4px;
+  color: #102033;
+  font-size: 0.9rem;
+}
+
+.loan-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.loan-note h3 {
+  font-size: 1.35rem;
+}
+
+.loan-note__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0 42px;
+}
+
+.loan-note__signature {
+  color: rgba(55, 72, 92, 0.84);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .employee-form {
@@ -675,5 +1032,39 @@ body {
   .shift-form__grid,
   .shift-form__grid--three {
     grid-template-columns: 1fr;
+  }
+
+  .loan-plan-preview,
+  .loan-signatures,
+  .loan-note-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .loan-document,
+  .loan-document * {
+    visibility: visible;
+  }
+
+  .loan-document {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  .loan-document-toolbar {
+    display: none;
+  }
+
+  .loan-letter,
+  .loan-note {
+    break-inside: avoid;
+    box-shadow: none;
   }
 }

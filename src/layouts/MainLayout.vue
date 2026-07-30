@@ -53,6 +53,16 @@ const menuItems = [
   { to: '/turnos', icon: 'schedule', label: 'Turnos', caption: 'Horarios y jornadas' },
   { to: '/departamentos', icon: 'apartment', label: 'Departamentos', caption: 'Areas de trabajo' },
   { to: '/reglas', icon: 'rule', label: 'Reglas', caption: 'Politicas de nomina' },
+  { to: '/vacaciones', icon: 'beach_access', label: 'Vacaciones', caption: 'Periodos y saldos' },
+  { to: '/dias-festivos', icon: 'event', label: 'Dias festivos', caption: 'Calendario laboral' },
+  {
+    to: '/prestamos',
+    icon: 'account_balance_wallet',
+    label: 'Prestamos',
+    caption: 'Anticipos y descuentos',
+  },
+  { to: '/imss', icon: 'health_and_safety', label: 'IMSS', caption: 'Datos de seguridad social' },
+  { to: '/nomina', icon: 'payments', label: 'Nomina', caption: 'Calculo y periodos' },
 ]
 
 function toggleLeftDrawer() {
